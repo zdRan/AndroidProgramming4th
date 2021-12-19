@@ -18,12 +18,12 @@ class MainActivity : AppCompatActivity() {
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
 
-        trueButton.setOnClickListener { view: View ->
+        trueButton.setOnClickListener {
             Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_LONG).show()
 
         }
         //挑战练习部分
-        falseButton.setOnClickListener { view: View ->
+        falseButton.setOnClickListener {
             val toast = Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_LONG)
             toast.setGravity(Gravity.TOP, 0, 0)
             toast.show()
