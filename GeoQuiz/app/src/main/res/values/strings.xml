@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
+    <string name="true_button">TRUE</string>
+    <string name="question_text">这是个好问题？</string>
+    <string name="false_button">FALSE</string>
+    <string name="correct_toast">correct!</string>
+    <string name="incorrect_toast">incorrect!</string>
 </resources>
