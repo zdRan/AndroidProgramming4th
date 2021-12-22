@@ -41,10 +41,10 @@ class MainActivity : AppCompatActivity() {
 
         //设置监听
         trueButton.setOnClickListener {
-            Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_LONG).show()
+            checkAnswer(true)
         }
         falseButton.setOnClickListener {
-            Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_LONG).show()
+            checkAnswer(false)
         }
         nextButton.setOnClickListener {
             //重新渲染问题
@@ -60,8 +60,22 @@ class MainActivity : AppCompatActivity() {
     /**
      * 刷新问题
      */
-    private fun updateQuestion(){
+    private fun updateQuestion() {
         val questionResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionResId)
+    }
+
+    /**
+     * 检查用户的答案
+     */
+    private fun checkAnswer(userAnswer: Boolean) {
+        val correctAnswer = questionBank[currentIndex].answer
+
+        val messageResId = if (correctAnswer == userAnswer) {
+            R.string.correct_toast
+        } else {
+            R.string.incorrect_toast
+        }
+        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
     }
 }
