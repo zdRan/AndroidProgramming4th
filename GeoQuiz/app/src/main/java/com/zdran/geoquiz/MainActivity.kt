@@ -20,13 +20,9 @@ class MainActivity : AppCompatActivity() {
 
         trueButton.setOnClickListener {
             Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_LONG).show()
-
         }
-        //挑战练习部分
         falseButton.setOnClickListener {
-            val toast = Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_LONG)
-            toast.setGravity(Gravity.TOP, 0, 0)
-            toast.show()
+            Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_LONG).show()
         }
     }
 }
