@@ -49,12 +49,18 @@ class MainActivity : AppCompatActivity() {
         nextButton.setOnClickListener {
             //重新渲染问题
             currentIndex = (currentIndex + 1) % questionBank.size
-            val questionResId = questionBank[currentIndex].textResId
-            questionTextView.setText(questionResId)
+            updateQuestion()
         }
 
         //视图渲染
         //1、设置问题内容
+        updateQuestion()
+    }
+
+    /**
+     * 刷新问题
+     */
+    private fun updateQuestion(){
         val questionResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionResId)
     }
