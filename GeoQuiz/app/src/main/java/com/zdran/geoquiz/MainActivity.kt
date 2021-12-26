@@ -120,6 +120,13 @@ class MainActivity : AppCompatActivity() {
             if (correctAnswer == userAnswer) 100 / questionBank.size else 0
     }
 
+    /**
+     * 处理回答问题后的一些逻辑
+     * 1、更新答题数目
+     * 2、判断所有问题是否已经回答完毕，并显示最终得分
+     * 3、同一个问题只能回答一次
+     * 4、禁用按钮
+     */
     private fun afterAnswer(){
         //更新答题数目
         currentAnswerCount++
@@ -133,6 +140,10 @@ class MainActivity : AppCompatActivity() {
         trueButton.isEnabled = false
         falseButton.isEnabled = false
     }
+
+    /**
+     * 显示最后得分
+     */
     private fun showScore() {
         val totalScore = questionBank.sumBy { question -> question.score }
         Toast.makeText(this, "score:$totalScore", Toast.LENGTH_LONG).show()
