@@ -3,13 +3,9 @@ package com.zdran.geoquiz
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import butterknife.BindView
-import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
 
@@ -31,9 +27,12 @@ class MainActivity : AppCompatActivity() {
     //当前问题的下标
     private var currentIndex = 0
 
+    //当前答题的数目
+    private var currentAnswerCount = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG,"onCreate called")
+        Log.d(TAG, "onCreate called")
 
         //设置视图
         setContentView(R.layout.activity_main)
@@ -104,6 +103,8 @@ class MainActivity : AppCompatActivity() {
         falseButton.isEnabled = !questionBank[currentIndex].answered
         trueButton.isEnabled = !questionBank[currentIndex].answered
 
+
+
     }
 
     /**
@@ -117,6 +118,22 @@ class MainActivity : AppCompatActivity() {
         } else {
             R.string.incorrect_toast
         }
-        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+
+        //更新得分
+        questionBank[currentIndex].score =
+            if (correctAnswer == userAnswer) 100 / questionBank.size else 0
+        //更新答题数目
+        currentAnswerCount++
+        //判断所有问题是否都已经回答完毕
+        if (currentAnswerCount == questionBank.size) {
+            showScore()
+        }
+    }
+
+    private fun showScore() {
+        val totalScore = questionBank.sumBy { question -> question.score }
+        Toast.makeText(this, "score:$totalScore", Toast.LENGTH_LONG).show()
+
     }
 }
