@@ -47,10 +47,16 @@ class MainActivity : AppCompatActivity() {
         //设置监听
         trueButton.setOnClickListener {
             checkAnswer(true)
+            it.isEnabled = false
+            falseButton.isEnabled = false
         }
+
         falseButton.setOnClickListener {
             checkAnswer(false)
+            it.isEnabled = false
+            trueButton.isEnabled = false
         }
+
         nextButton.setOnClickListener {
             //重新渲染问题
             currentIndex = (currentIndex + 1) % questionBank.size
@@ -93,6 +99,11 @@ class MainActivity : AppCompatActivity() {
     private fun updateQuestion() {
         val questionResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionResId)
+        Log.d(TAG, "updateQuestion: " + questionBank[currentIndex].answered)
+        //禁用按钮
+        falseButton.isEnabled = !questionBank[currentIndex].answered
+        trueButton.isEnabled = !questionBank[currentIndex].answered
+
     }
 
     /**
