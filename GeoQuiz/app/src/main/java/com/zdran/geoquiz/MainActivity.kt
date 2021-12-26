@@ -46,14 +46,12 @@ class MainActivity : AppCompatActivity() {
         //设置监听
         trueButton.setOnClickListener {
             checkAnswer(true)
-            it.isEnabled = false
-            falseButton.isEnabled = false
+            afterAnswer()
         }
 
         falseButton.setOnClickListener {
             checkAnswer(false)
-            it.isEnabled = false
-            trueButton.isEnabled = false
+            afterAnswer()
         }
 
         nextButton.setOnClickListener {
@@ -103,8 +101,6 @@ class MainActivity : AppCompatActivity() {
         falseButton.isEnabled = !questionBank[currentIndex].answered
         trueButton.isEnabled = !questionBank[currentIndex].answered
 
-
-
     }
 
     /**
@@ -119,18 +115,24 @@ class MainActivity : AppCompatActivity() {
             R.string.incorrect_toast
         }
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
-
         //更新得分
         questionBank[currentIndex].score =
             if (correctAnswer == userAnswer) 100 / questionBank.size else 0
+    }
+
+    private fun afterAnswer(){
         //更新答题数目
         currentAnswerCount++
         //判断所有问题是否都已经回答完毕
         if (currentAnswerCount == questionBank.size) {
             showScore()
         }
+        //禁用问题
+        questionBank[currentIndex].answered = true
+        //禁用按钮
+        trueButton.isEnabled = false
+        falseButton.isEnabled = false
     }
-
     private fun showScore() {
         val totalScore = questionBank.sumBy { question -> question.score }
         Toast.makeText(this, "score:$totalScore", Toast.LENGTH_LONG).show()
