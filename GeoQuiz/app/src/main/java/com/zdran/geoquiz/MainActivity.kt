@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity() {
             currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
         }
+        questionTextView.setOnClickListener {
+            //重新渲染问题
+            currentIndex = (currentIndex + 1) % questionBank.size
+            updateQuestion()
+        }
 
         //视图渲染
         //1、设置问题内容
