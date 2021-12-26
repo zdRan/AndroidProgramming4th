@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
+    private lateinit var prevButton: Button
     private lateinit var questionTextView: TextView
 
     //问题列表
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
+        prevButton = findViewById(R.id.prev_button)
 
         //设置监听
         trueButton.setOnClickListener {
@@ -54,6 +56,11 @@ class MainActivity : AppCompatActivity() {
         questionTextView.setOnClickListener {
             //重新渲染问题
             currentIndex = (currentIndex + 1) % questionBank.size
+            updateQuestion()
+        }
+        prevButton.setOnClickListener {
+            //重新渲染问题
+            currentIndex = if (currentIndex == 0) questionBank.size - 1 else currentIndex - 1
             updateQuestion()
         }
 
