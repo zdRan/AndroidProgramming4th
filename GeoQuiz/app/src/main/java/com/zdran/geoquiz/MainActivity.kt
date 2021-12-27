@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
 
@@ -29,10 +30,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG,"onCreate called")
+        Log.d(TAG, "onCreate called")
 
         //设置视图
         setContentView(R.layout.activity_main)
+        //绑定 ViewModel
+        //书中代码过时
+        val quizViewModel = ViewModelProvider(this)[QuizViewModel::class.java]
+        Log.d(TAG, "quizViewModel：$quizViewModel")
 
         //绑定组件
         trueButton = findViewById(R.id.true_button)
