@@ -16,17 +16,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var questionTextView: TextView
 
-    //问题列表
-    private val questionBank = listOf(
-        Question(R.string.question_1, true),
-        Question(R.string.question_2, false),
-        Question(R.string.question_3, true),
-        Question(R.string.question_4, false),
-        Question(R.string.question_5, true)
-    )
-
-    //当前问题的下标
-    private var currentIndex = 0
+    //初始化 ViewModel
+    private val quizViewModel: QuizViewModel by lazy {
+        //绑定 ViewModel,(书中代码过时)
+        ViewModelProvider(this)[QuizViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         //设置视图
         setContentView(R.layout.activity_main)
-        //绑定 ViewModel
-        //书中代码过时
-        val quizViewModel = ViewModelProvider(this)[QuizViewModel::class.java]
-        Log.d(TAG, "quizViewModel：$quizViewModel")
 
         //绑定组件
         trueButton = findViewById(R.id.true_button)
@@ -54,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         }
         nextButton.setOnClickListener {
             //重新渲染问题
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
         }
 
@@ -92,17 +82,14 @@ class MainActivity : AppCompatActivity() {
      * 刷新问题
      */
     private fun updateQuestion() {
-        val questionResId = questionBank[currentIndex].textResId
-        questionTextView.setText(questionResId)
+        questionTextView.setText(quizViewModel.currentIndexTextId)
     }
 
     /**
      * 检查用户的答案
      */
     private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionBank[currentIndex].answer
-
-        val messageResId = if (correctAnswer == userAnswer) {
+        val messageResId = if (quizViewModel.currentIndexAnswer == userAnswer) {
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
