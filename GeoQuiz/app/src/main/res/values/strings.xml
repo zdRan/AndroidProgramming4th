@@ -10,4 +10,8 @@
     <string name="correct_toast">correct!</string>
     <string name="incorrect_toast">incorrect!</string>
     <string name="next_button">NEXT</string>
+    <string name="warning_text">确定要看答案么？</string>
+    <string name="show_answer_button">Show Answer</string>
+    <string name="cheat_button">Cheat!</string>
+    <string name="judgment_toast">cheat is wrong!</string>
 </resources>
