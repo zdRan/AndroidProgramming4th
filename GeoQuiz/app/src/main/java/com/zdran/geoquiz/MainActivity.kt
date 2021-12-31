@@ -1,5 +1,6 @@
 package com.zdran.geoquiz
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
+
+// savedInstanceState 常量
 private const val KEY_INDEX = "index"
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
     private lateinit var questionTextView: TextView
+    private lateinit var cheatButton: Button
+
 
     //初始化 ViewModel
     private val quizViewModel: QuizViewModel by lazy {
@@ -32,13 +37,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //从 SaveInstanceState 中初始化数据
-        quizViewModel.currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0)?:0
+        quizViewModel.currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
 
         //绑定组件
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
+        cheatButton = findViewById(R.id.cheat_button)
+
 
         //设置监听
         trueButton.setOnClickListener {
@@ -51,6 +58,11 @@ class MainActivity : AppCompatActivity() {
             //重新渲染问题
             quizViewModel.moveToNext()
             updateQuestion()
+        }
+        cheatButton.setOnClickListener {
+            val answerIsTrue = quizViewModel.currentIndexAnswer
+            val intent = CheatActivity.newIntent(this, answerIsTrue)
+            startActivity(intent)
         }
         //视图渲染
         updateQuestion()
