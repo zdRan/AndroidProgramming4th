@@ -1,5 +1,6 @@
 package com.zdran.geoquiz
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -18,6 +19,10 @@ private const val KEY_INDEX = "index"
 //启动 Activity 的 Code 常量
 //CheatActivity
 private const val REQUEST_CODE_CHEAT = 0
+
+
+//Intent extra 返回结果的常量
+private const val EXTRA_ANSWER_SHOWN = "com.zdran.geoquiz.answer_shown"
 
 
 class MainActivity : AppCompatActivity() {
@@ -107,6 +112,18 @@ class MainActivity : AppCompatActivity() {
         outState.putInt(KEY_INDEX, quizViewModel.currentIndex)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            quizViewModel.isCheater = data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+        }
+    }
+
     /**
      * 刷新问题
      */
@@ -118,11 +135,11 @@ class MainActivity : AppCompatActivity() {
      * 检查用户的答案
      */
     private fun checkAnswer(userAnswer: Boolean) {
-        val messageResId = if (quizViewModel.currentIndexAnswer == userAnswer) {
-            R.string.correct_toast
-        } else {
-            R.string.incorrect_toast
+        val messageResId = when {
+            quizViewModel.isCheater -> R.string.judgment_toast
+            userAnswer == quizViewModel.currentIndexAnswer -> R.string.correct_toast
+            else -> R.string.incorrect_toast
         }
-        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
     }
 }

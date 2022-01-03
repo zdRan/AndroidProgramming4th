@@ -17,6 +17,9 @@ class QuizViewModel : ViewModel() {
 
     //当前问题的下标
     var currentIndex = 0
+    
+    //当前用户是否作弊
+    var isCheater = false
 
     val currentIndexAnswer:Boolean
         get() = questionBank[currentIndex].answer
