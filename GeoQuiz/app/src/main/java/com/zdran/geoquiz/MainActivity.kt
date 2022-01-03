@@ -16,6 +16,9 @@ private const val TAG = "MainActivity"
 // savedInstanceState 常量
 private const val KEY_INDEX = "index"
 
+//是否作弊
+private const val IS_CHEATER = "isCheater"
+
 //启动 Activity 的 Code 常量
 //CheatActivity
 private const val REQUEST_CODE_CHEAT = 0
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         //从 SaveInstanceState 中初始化数据
         quizViewModel.currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
+        quizViewModel.isCheater = savedInstanceState?.getBoolean(IS_CHEATER, false) ?: false
 
         //绑定组件
         trueButton = findViewById(R.id.true_button)
@@ -110,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         Log.i(TAG, "onSaveInstanceState: called")
         outState.putInt(KEY_INDEX, quizViewModel.currentIndex)
+        outState.putBoolean(IS_CHEATER, quizViewModel.isCheater)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
