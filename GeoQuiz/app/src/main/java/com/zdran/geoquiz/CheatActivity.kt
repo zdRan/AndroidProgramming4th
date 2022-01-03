@@ -11,10 +11,14 @@ import java.security.AccessControlContext
 //Intent extra 常量
 private const val EXTRA_ANSWER_IS_TRUE = "com.zdran.geoquiz.answer_is_true"
 
+//Intent extra 返回结果的常量
+private const val EXTRA_ANSWER_SHOWN = "com.zdran.geoquiz.answer_shown"
+
+
 class CheatActivity : AppCompatActivity() {
     private var answerIsTrue = false
 
-    private lateinit var answerTextView:TextView
+    private lateinit var answerTextView: TextView
     private lateinit var showAnswerButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,13 +32,21 @@ class CheatActivity : AppCompatActivity() {
 
         //设置监听
         showAnswerButton.setOnClickListener {
-            val answerText = when{
+            val answerText = when {
                 answerIsTrue -> R.string.true_button
                 else -> R.string.false_button
             }
             answerTextView.setText(answerText)
-        }
+            setAnswerShownResult(true)
 
+        }
+    }
+
+    private fun setAnswerShownResult(isAnswerShown: Boolean) {
+        val data = Intent().apply {
+            putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown)
+        }
+        setResult(RESULT_OK, data)
     }
 
     companion object {

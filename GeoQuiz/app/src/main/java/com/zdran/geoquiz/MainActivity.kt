@@ -15,6 +15,11 @@ private const val TAG = "MainActivity"
 // savedInstanceState 常量
 private const val KEY_INDEX = "index"
 
+//启动 Activity 的 Code 常量
+//CheatActivity
+private const val REQUEST_CODE_CHEAT = 0
+
+
 class MainActivity : AppCompatActivity() {
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
@@ -62,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         cheatButton.setOnClickListener {
             val answerIsTrue = quizViewModel.currentIndexAnswer
             val intent = CheatActivity.newIntent(this, answerIsTrue)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_CHEAT)
         }
         //视图渲染
         updateQuestion()
