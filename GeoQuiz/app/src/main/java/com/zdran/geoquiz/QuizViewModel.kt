@@ -20,6 +20,8 @@ class QuizViewModel : ViewModel() {
     
     //当前用户是否作弊
     var isCheater = false
+    //当前用户作弊次数
+    var cheatCount = 0
 
     val currentIndexAnswer:Boolean
         get() = questionBank[currentIndex].answer

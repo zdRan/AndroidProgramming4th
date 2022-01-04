@@ -41,7 +41,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/cheat_button"/>
-
+    <TextView
+        android:id="@+id/cheat_count_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        tools:text="3"
+        />
     <Button
         android:id="@+id/next_button"
         android:layout_width="wrap_content"

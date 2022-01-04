@@ -1,5 +1,6 @@
 package com.zdran.geoquiz
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var questionTextView: TextView
     private lateinit var cheatButton: Button
-
+    private lateinit var cheatCountView: TextView
 
     //初始化 ViewModel
     private val quizViewModel: QuizViewModel by lazy {
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
         cheatButton = findViewById(R.id.cheat_button)
+        cheatCountView = findViewById(R.id.cheat_count_view)
 
 
         //设置监听
@@ -68,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             //重新渲染问题
             quizViewModel.moveToNext()
             updateQuestion()
+            updateCheatCount(0)
         }
         cheatButton.setOnClickListener {
             val answerIsTrue = quizViewModel.currentIndexAnswer
@@ -76,6 +79,8 @@ class MainActivity : AppCompatActivity() {
         }
         //视图渲染
         updateQuestion()
+        updateCheatCount(0)
+
     }
 
     override fun onStart() {
@@ -121,6 +126,11 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == REQUEST_CODE_CHEAT) {
             quizViewModel.isCheater = data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+            if (quizViewModel.isCheater) {
+                updateCheatCount(1)
+            } else {
+                updateCheatCount(0)
+            }
         }
     }
 
@@ -129,6 +139,19 @@ class MainActivity : AppCompatActivity() {
      */
     private fun updateQuestion() {
         questionTextView.setText(quizViewModel.currentIndexTextId)
+    }
+
+    /**
+     * 刷新作弊次数
+     */
+    private fun updateCheatCount(count: Int) {
+        quizViewModel.cheatCount += count
+        val text = "剩余次数：${quizViewModel.cheatCount}"
+        cheatCountView.text = text
+        //大于3次禁用按钮
+        if (quizViewModel.cheatCount >= 3) {
+            cheatButton.isEnabled = false
+        }
     }
 
     /**
