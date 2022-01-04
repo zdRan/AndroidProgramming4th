@@ -2,6 +2,7 @@ package com.zdran.geoquiz
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -20,6 +21,7 @@ class CheatActivity : AppCompatActivity() {
 
     private lateinit var answerTextView: TextView
     private lateinit var showAnswerButton: Button
+    private lateinit var showVersion: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,7 @@ class CheatActivity : AppCompatActivity() {
         //绑定组件
         answerTextView = findViewById(R.id.answer_text_view)
         showAnswerButton = findViewById(R.id.show_answer_button)
+        showVersion = findViewById(R.id.show_version)
 
         //设置监听
         showAnswerButton.setOnClickListener {
@@ -38,8 +41,9 @@ class CheatActivity : AppCompatActivity() {
             }
             answerTextView.setText(answerText)
             setAnswerShownResult(true)
-
         }
+
+        showVersion.text = Build.VERSION.SDK_INT.toString()
     }
 
     private fun setAnswerShownResult(isAnswerShown: Boolean) {
