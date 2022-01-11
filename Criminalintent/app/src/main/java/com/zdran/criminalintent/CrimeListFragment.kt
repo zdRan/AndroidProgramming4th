@@ -85,7 +85,11 @@ class CrimeListFragment : Fragment() {
         RecyclerView.Adapter<CrimeHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
             //生成 view 视图，并放到 holder 里
-            return CrimeHolder(layoutInflater.inflate(R.layout.list_item_crime, parent, false))
+            return if (viewType == 1) {
+                CrimeHolder(layoutInflater.inflate(R.layout.list_item_crime_police, parent, false))
+            } else {
+                CrimeHolder(layoutInflater.inflate(R.layout.list_item_crime, parent, false))
+            }
         }
 
         override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
@@ -98,5 +102,8 @@ class CrimeListFragment : Fragment() {
             return crimes.size
         }
 
+        override fun getItemViewType(position: Int): Int {
+            return if (crimes[position].requiresPolice) 1 else 2
+        }
     }
 }
