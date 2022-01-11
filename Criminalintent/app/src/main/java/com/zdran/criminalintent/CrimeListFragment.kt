@@ -1,6 +1,7 @@
 package com.zdran.criminalintent
 
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -74,7 +75,7 @@ class CrimeListFragment : Fragment() {
         fun bind(crime: Crime) {
             this.crime = crime
             titleTextView.text = crime.title
-            dateTextView.text = crime.data.toString()
+            dateTextView.text = DateFormat.format("yyyy-MM-dd˚ HH:mm:ss",crime.data)
             solvedImageView.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
         }
 
