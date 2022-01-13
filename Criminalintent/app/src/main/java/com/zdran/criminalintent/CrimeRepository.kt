@@ -1,6 +1,7 @@
 package com.zdran.criminalintent
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.zdran.criminalintent.database.CrimeDatabase
 import java.util.*
@@ -15,8 +16,8 @@ class CrimeRepository private constructor(context: Context) {
     ).build()
     private val crimeDAO = database.crimeDAO()
 
-    fun getCrimes(): List<Crime> = crimeDAO.getCrimes()
-    fun getCrime(uuid: UUID): Crime? = crimeDAO.getCrime(uuid)
+    fun getCrimes(): LiveData<List<Crime>> = crimeDAO.getCrimes()
+    fun getCrime(uuid: UUID): LiveData<Crime?> = crimeDAO.getCrime(uuid)
 
     companion object {
         private var INSTANCE: CrimeRepository? = null
