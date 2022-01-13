@@ -16,17 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 private const val TAG = "CrimeListFragment"
 
 class CrimeListFragment : Fragment() {
-    private lateinit var crimeRecyclerList: RecyclerView
-    private var adapter: CrimeAdapter? = null
+    private lateinit var crimeRecyclerListView: RecyclerView
+    private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
 
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProvider(this)[CrimeListViewModel::class.java]
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate: total crimes :${crimeListViewModel.crimes.size}")
-    }
 
     //处理视图
     override fun onCreateView(
@@ -36,19 +32,28 @@ class CrimeListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
 
-        crimeRecyclerList = view.findViewById(R.id.crime_recycler_view)
+        crimeRecyclerListView = view.findViewById(R.id.crime_recycler_view)
         // RecycleView 需要指定视图管理器
-        crimeRecyclerList.layoutManager = LinearLayoutManager(context)
-
-        //更新视图
-        updateUI()
-
+        crimeRecyclerListView.layoutManager = LinearLayoutManager(context)
+        crimeRecyclerListView.adapter = adapter
 
         return view
     }
 
-    private fun updateUI() {
-        crimeRecyclerList.adapter = CrimeAdapter(crimeListViewModel.crimes)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        crimeListViewModel.crimeListLiveData.observe(
+            viewLifecycleOwner,
+            { crimes ->
+                crimes?.let {
+                    Log.i(TAG, "onViewCreated: Got crimes ${crimes.size}")
+                    updateUI(crimes)
+                }
+            }
+        )
+    }
+    private fun updateUI(crimes: List<Crime>) {
+        crimeRecyclerListView.adapter = CrimeAdapter(crimes)
     }
 
     //伴生对象,用于初始化 CrimeListFragment
