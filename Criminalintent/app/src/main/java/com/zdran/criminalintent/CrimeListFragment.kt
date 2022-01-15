@@ -10,7 +10,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
@@ -61,7 +63,10 @@ class CrimeListFragment : Fragment() {
             { crimes ->
                 crimes?.let {
                     Log.i(TAG, "onViewCreated: Got crimes ${crimes.size}")
-                    updateUI(crimes)
+                    adapter?.submitList(crimes)
+                    //updateUI(crimes)
+                    //一定要对 crimes 赋值 ，不然无法显示列表
+                    adapter?.crimes = crimes
                 }
             }
         )
@@ -108,9 +113,21 @@ class CrimeListFragment : Fragment() {
         }
     }
 
+    private inner class CrimeDiffUtilCallback : DiffUtil.ItemCallback<Crime>() {
+        //判断是否为同一个对象
+        override fun areItemsTheSame(oldItem: Crime, newItem: Crime): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Crime, newItem: Crime): Boolean {
+            return oldItem.toString() == newItem.toString()
+        }
+
+    }
+
     //初始化 adapter 的时候需要指定数据集
-    private inner class CrimeAdapter(var crimes: List<Crime>) :
-        RecyclerView.Adapter<CrimeHolder>() {
+    private inner class CrimeAdapter(var crimes: List<Crime>) : ListAdapter<Crime, CrimeHolder>(CrimeDiffUtilCallback()) {
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
             //生成 view 视图，并放到 holder 里
             return CrimeHolder(layoutInflater.inflate(R.layout.list_item_crime, parent, false))
@@ -118,6 +135,7 @@ class CrimeListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
             //初始化视图需要展示的内容
+            Log.d(TAG, "onBindViewHolder: ${crimes[position].title}")
             holder.bind(crimes[position])
         }
 
