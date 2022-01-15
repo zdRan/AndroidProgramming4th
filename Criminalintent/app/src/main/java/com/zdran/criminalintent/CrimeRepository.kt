@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.zdran.criminalintent.database.CrimeDatabase
 import java.util.*
+import java.util.concurrent.Executors
 
 private const val DATA_NAME = "crime-database"
 
@@ -15,10 +16,21 @@ class CrimeRepository private constructor(context: Context) {
         DATA_NAME
     ).build()
     private val crimeDAO = database.crimeDAO()
-
+    private val executor = Executors.newSingleThreadExecutor()
     fun getCrimes(): LiveData<List<Crime>> = crimeDAO.getCrimes()
     fun getCrime(uuid: UUID): LiveData<Crime?> = crimeDAO.getCrime(uuid)
-    fun addCrime(crime: Crime) = crimeDAO.addCrime(crime)
+
+    fun updateCrime(crime: Crime) {
+        executor.execute {
+            crimeDAO.updateCrime(crime)
+        }
+    }
+
+    fun addCrime(crime: Crime) {
+        executor.execute {
+            crimeDAO.addCrime(crime)
+        }
+    }
 
     companion object {
         private var INSTANCE: CrimeRepository? = null
