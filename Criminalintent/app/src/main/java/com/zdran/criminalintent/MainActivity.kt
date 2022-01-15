@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), CrimeListFragment.Callbacks {
     override fun onCrimeSelected(crimeId: UUID) {
         Log.d(TAG, "onCrimeSelected: ${crimeId.toString()}")
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, CrimeFragment())
+            .replace(R.id.fragment_container, CrimeFragment.newInstance(crimeId))
             .addToBackStack(null)
             .commit()
     }

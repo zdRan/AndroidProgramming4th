@@ -11,20 +11,30 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import java.util.*
 
 
 private const val TAG = "CrimeFragment"
+
+private const val ARGS_CRIME_ID = "crime_id"
 
 class CrimeFragment : Fragment() {
     private lateinit var crime: Crime
     private lateinit var titleFiled: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
+    private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
+        ViewModelProvider(this)[CrimeDetailViewModel::class.java]
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime = Crime()
+        val crimeId: UUID = arguments?.getSerializable(ARGS_CRIME_ID) as UUID
+        Log.d(TAG, "onCreate: $crimeId")
+        crimeDetailViewModel.loadCrime(crimeId)
     }
 
     override fun onCreateView(
@@ -42,6 +52,20 @@ class CrimeFragment : Fragment() {
             isEnabled = false
         }
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        crimeDetailViewModel.crimeLiveData.observe(
+            viewLifecycleOwner,
+            { crime ->
+                run {
+                    crime?.let {
+                        this.crime = crime
+                        updateUI()
+                    }
+                }
+            })
     }
 
     override fun onStart() {
@@ -70,6 +94,27 @@ class CrimeFragment : Fragment() {
             setOnCheckedChangeListener { _, isChecked ->
                 crime.isSolved = isChecked
             }
+        }
+    }
+
+    companion object {
+        fun newInstance(crimeId: UUID): CrimeFragment {
+            val args = Bundle().apply {
+                putSerializable(ARGS_CRIME_ID, crimeId)
+            }
+            return CrimeFragment().apply {
+                arguments = args
+            }
+
+        }
+    }
+
+    private fun updateUI() {
+        titleFiled.setText(crime.title)
+        dateButton.text = crime.data.toString()
+        solvedCheckBox.apply {
+            isChecked = crime.isSolved
+            jumpDrawablesToCurrentState()
         }
     }
 }
