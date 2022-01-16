@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +27,8 @@ class CrimeListFragment : Fragment() {
 
     private var callbacks: Callbacks? = null
     private lateinit var crimeRecyclerListView: RecyclerView
+    private lateinit var emptyTextView: TextView
+    private lateinit var emptyAddButton: Button
     private var adapter: CrimeAdapter? = CrimeAdapter(emptyList())
 
     private val crimeListViewModel: CrimeListViewModel by lazy {
@@ -51,6 +55,9 @@ class CrimeListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_crime_list, container, false)
 
         crimeRecyclerListView = view.findViewById(R.id.crime_recycler_view)
+        emptyTextView = view.findViewById(R.id.empty_text)
+        emptyAddButton = view.findViewById(R.id.empty_add_button)
+
         // RecycleView 需要指定视图管理器
         crimeRecyclerListView.layoutManager = LinearLayoutManager(context)
         crimeRecyclerListView.adapter = adapter
@@ -69,6 +76,20 @@ class CrimeListFragment : Fragment() {
                 }
             }
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        //注册监听器
+        emptyAddButton.setOnClickListener {
+            Log.d(TAG, "onStart: 新建按钮被点击~")
+            val crime = Crime()
+            crimeListViewModel.addCrime(crime)
+            //跳转到更新项
+            callbacks?.onCrimeSelected(crime.id)
+            crimeListViewModel.crimeListLiveData.value?.let { it1 -> updateUI(it1) }
+        }
+
     }
 
     override fun onDestroy() {
@@ -99,6 +120,16 @@ class CrimeListFragment : Fragment() {
 
     private fun updateUI(crimes: List<Crime>) {
         crimeRecyclerListView.adapter = CrimeAdapter(crimes)
+
+        if (crimes.isNotEmpty()) {
+            crimeRecyclerListView.isVisible = true
+            emptyTextView.isVisible = false
+            emptyAddButton.isVisible = false
+        } else {
+            crimeRecyclerListView.isVisible = false
+            emptyTextView.isVisible = true
+            emptyAddButton.isVisible = true
+        }
     }
 
     //伴生对象,用于初始化 CrimeListFragment
