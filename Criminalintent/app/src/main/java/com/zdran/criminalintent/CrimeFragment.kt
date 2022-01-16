@@ -21,7 +21,10 @@ private const val TAG = "CrimeFragment"
 private const val ARGS_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
 
-class CrimeFragment : Fragment() {
+//时间选择框的返回code
+private const val REQUEST_DATE = 0
+
+class CrimeFragment : Fragment(),DatePickerFragment.Callbacks {
     private lateinit var crime: Crime
     private lateinit var titleFiled: EditText
     private lateinit var dateButton: Button
@@ -33,7 +36,6 @@ class CrimeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crime = Crime()
         val crimeId: UUID = arguments?.getSerializable(ARGS_CRIME_ID) as UUID
         Log.d(TAG, "onCreate: $crimeId")
         crimeDetailViewModel.loadCrime(crimeId)
@@ -95,6 +97,7 @@ class CrimeFragment : Fragment() {
         //时间按钮的监听器
         dateButton.setOnClickListener {
             DatePickerFragment.newInstance(crime.data).apply {
+                setTargetFragment(this@CrimeFragment, REQUEST_DATE)
                 show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
             }
         }
@@ -124,5 +127,10 @@ class CrimeFragment : Fragment() {
             isChecked = crime.isSolved
             jumpDrawablesToCurrentState()
         }
+    }
+
+    override fun onDateSelected(date: Date) {
+        crime.data = date
+        updateUI()
     }
 }
