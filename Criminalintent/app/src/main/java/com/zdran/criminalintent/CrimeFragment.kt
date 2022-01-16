@@ -20,14 +20,16 @@ private const val TAG = "CrimeFragment"
 
 private const val ARGS_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
+private const val DIALOG_TIME = "DialogTime"
 
 //时间选择框的返回code
 private const val REQUEST_DATE = 0
 
-class CrimeFragment : Fragment(),DatePickerFragment.Callbacks {
+class CrimeFragment : Fragment(), DatePickerFragment.Callbacks,TimePickerFragment.Callbacks{
     private lateinit var crime: Crime
     private lateinit var titleFiled: EditText
     private lateinit var dateButton: Button
+    private lateinit var timeButton: Button
     private lateinit var solvedCheckBox: CheckBox
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
         ViewModelProvider(this)[CrimeDetailViewModel::class.java]
@@ -49,6 +51,7 @@ class CrimeFragment : Fragment(),DatePickerFragment.Callbacks {
         val view = inflater.inflate(R.layout.fragment_crime, container, false)
         titleFiled = view.findViewById(R.id.crime_title) as EditText
         dateButton = view.findViewById(R.id.crime_date) as Button
+        timeButton = view.findViewById(R.id.crime_time) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
         return view
     }
@@ -101,6 +104,12 @@ class CrimeFragment : Fragment(),DatePickerFragment.Callbacks {
                 show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
             }
         }
+        timeButton.setOnClickListener{
+            TimePickerFragment.newInstance(crime.data).apply {
+                setTargetFragment(this@CrimeFragment, REQUEST_DATE)
+                show(this@CrimeFragment.requireFragmentManager(),DIALOG_TIME)
+            }
+        }
     }
 
     override fun onStop() {
@@ -122,15 +131,38 @@ class CrimeFragment : Fragment(),DatePickerFragment.Callbacks {
 
     private fun updateUI() {
         titleFiled.setText(crime.title)
-        dateButton.text = DateFormat.format("yyyy-MM-dd HH:mm:ss",crime.data)
-        solvedCheckBox . apply {
+        dateButton.text = DateFormat.format("yyyy-MM-dd", crime.data)
+        timeButton.text = DateFormat.format("HH:mm:ss", crime.data)
+        solvedCheckBox.apply {
             isChecked = crime.isSolved
             jumpDrawablesToCurrentState()
         }
     }
 
     override fun onDateSelected(date: Date) {
-        crime.data = date
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+        val crimeCalendar = Calendar.getInstance()
+        crimeCalendar.time = crime.data
+
+        crimeCalendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH))
+
+        crime.data = crimeCalendar.time
+        updateUI()
+    }
+
+    override fun onTimeSelected(date: Date) {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
+        val crimeCalendar = Calendar.getInstance()
+        crimeCalendar.time = crime.data
+        crimeCalendar.set(Calendar.HOUR_OF_DAY,calendar.get(Calendar.HOUR_OF_DAY))
+        crimeCalendar.set(Calendar.MINUTE,calendar.get(Calendar.MINUTE))
+        crimeCalendar.set(Calendar.MILLISECOND,calendar.get(Calendar.MILLISECOND))
+
+        crime.data = crimeCalendar.time
         updateUI()
     }
 }

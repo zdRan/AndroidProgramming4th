@@ -10,11 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crime_title_label" />
+
     <EditText
         android:id="@+id/crime_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crime_title_hint"/>
+        android:minHeight="48dp"
+        android:text="@string/crime_title_hint" />
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
@@ -24,7 +26,12 @@
         android:id="@+id/crime_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="2020-02-02:20:20:20"/>
+        tools:text="2020-02-02"/>
+    <Button
+        android:id="@+id/crime_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="20:20:20"/>
     <CheckBox
         android:id="@+id/crime_solved"
         android:layout_width="match_parent"
