@@ -18,6 +18,7 @@ import java.util.*
 private const val TAG = "CrimeFragment"
 
 private const val ARGS_CRIME_ID = "crime_id"
+private const val DIALOG_DATE = "DialogDate"
 
 class CrimeFragment : Fragment() {
     private lateinit var crime: Crime
@@ -46,11 +47,6 @@ class CrimeFragment : Fragment() {
         titleFiled = view.findViewById(R.id.crime_title) as EditText
         dateButton = view.findViewById(R.id.crime_date) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
-        //禁止点击
-        dateButton.apply {
-            text = crime.data.toString()
-            isEnabled = false
-        }
         return view
     }
 
@@ -93,6 +89,12 @@ class CrimeFragment : Fragment() {
         solvedCheckBox.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 crime.isSolved = isChecked
+            }
+        }
+        //时间按钮的监听器
+        dateButton.setOnClickListener {
+            DatePickerFragment().apply {
+                show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
             }
         }
     }
