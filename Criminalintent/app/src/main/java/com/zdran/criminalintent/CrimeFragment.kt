@@ -3,6 +3,7 @@ package com.zdran.criminalintent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -93,7 +94,7 @@ class CrimeFragment : Fragment() {
         }
         //时间按钮的监听器
         dateButton.setOnClickListener {
-            DatePickerFragment().apply {
+            DatePickerFragment.newInstance(crime.data).apply {
                 show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
             }
         }
@@ -118,8 +119,8 @@ class CrimeFragment : Fragment() {
 
     private fun updateUI() {
         titleFiled.setText(crime.title)
-        dateButton.text = crime.data.toString()
-        solvedCheckBox.apply {
+        dateButton.text = DateFormat.format("yyyy-MM-dd HH:mm:ss",crime.data)
+        solvedCheckBox . apply {
             isChecked = crime.isSolved
             jumpDrawablesToCurrentState()
         }
