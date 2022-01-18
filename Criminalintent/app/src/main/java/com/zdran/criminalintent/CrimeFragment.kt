@@ -24,7 +24,7 @@ private const val DIALOG_DATE = "DialogDate"
 //时间选择框的返回code
 private const val REQUEST_DATE = 0
 
-class CrimeFragment : Fragment(),DatePickerFragment.Callbacks {
+class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     private lateinit var crime: Crime
     private lateinit var titleFiled: EditText
     private lateinit var dateButton: Button
@@ -122,8 +122,8 @@ class CrimeFragment : Fragment(),DatePickerFragment.Callbacks {
 
     private fun updateUI() {
         titleFiled.setText(crime.title)
-        dateButton.text = DateFormat.format("yyyy-MM-dd HH:mm:ss",crime.data)
-        solvedCheckBox . apply {
+        dateButton.text = DateFormat.format("yyyy-MM-dd HH:mm:ss", crime.data)
+        solvedCheckBox.apply {
             isChecked = crime.isSolved
             jumpDrawablesToCurrentState()
         }
@@ -132,5 +132,23 @@ class CrimeFragment : Fragment(),DatePickerFragment.Callbacks {
     override fun onDateSelected(date: Date) {
         crime.data = date
         updateUI()
+    }
+
+    /**
+     * 生成消息
+     */
+    private fun getReport(): String {
+        val solvedString = if (crime.isSolved) {
+            getString(R.string.crime_report_solved)
+        } else {
+            getString(R.string.crime_report_unsolved)
+        }
+        val dateString = DateFormat.format("yyyy-MM-dd", crime.data).toString()
+        var suspect = if (crime.suspect.isBlank()) {
+            getString(R.string.crime_report_no_suspect)
+        } else {
+            getString(R.string.crime_report_suspect, crime.suspect)
+        }
+        return getString(R.string.crime_report, crime.title, dateString, solvedString, suspect)
     }
 }
