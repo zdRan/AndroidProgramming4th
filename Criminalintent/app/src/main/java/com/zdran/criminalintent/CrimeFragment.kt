@@ -1,5 +1,6 @@
 package com.zdran.criminalintent
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,6 +18,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
@@ -30,7 +33,7 @@ private const val DIALOG_DATE = "DialogDate"
 //时间选择框的返回code
 private const val REQUEST_DATE = 0
 private const val REQUEST_CONTACT = 1
-private const val DATE_FORMAT = "yyyy-MM-dd"
+private const val PERMISSION_REQUEST_CONTACT = 2
 
 class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     private lateinit var crime: Crime
@@ -147,14 +150,37 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         }
         //打电话按钮的监听
         callButton.setOnClickListener {
-
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.READ_CONTACTS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.d(TAG, "callButton: 权限有效")
+            } else {
+                Log.d(TAG, "callButton: 没有权限")
+                requestCameraPermission()
+            }
         }
-
     }
 
     override fun onStop() {
         super.onStop()
         crimeDetailViewModel.saveCrime(crime)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+
+        when(requestCode){
+            PERMISSION_REQUEST_CONTACT->{
+                if (grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    Log.d(TAG, "onRequestPermissionsResult: 请求权限通过")
+                }
+            }
+        }
     }
 
     companion object {
@@ -231,5 +257,28 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
             getString(R.string.crime_report_suspect, crime.suspect)
         }
         return getString(R.string.crime_report, crime.title, dateString, solvedString, suspect)
+    }
+
+    private fun requestCameraPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.CAMERA
+            )
+        ) {
+
+            Toast.makeText(requireContext(), "需要联系人权限", Toast.LENGTH_SHORT).show()
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.READ_CONTACTS),
+                PERMISSION_REQUEST_CONTACT
+            )
+
+        } else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.READ_CONTACTS),
+                PERMISSION_REQUEST_CONTACT
+            )
+        }
     }
 }
