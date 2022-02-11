@@ -7,6 +7,7 @@
     <string name="new_crime">New Crime</string>
     <string name="crime_suspect_text">Choose Suspect</string>
     <string name="crime_report_text">Sent Crime Report</string>
+    <string name="crime_call_text">Call</string>
     <string name="crime_report">%1$s!
         The crime was discovered on %2$s. %3$s, and %4$s
     </string>

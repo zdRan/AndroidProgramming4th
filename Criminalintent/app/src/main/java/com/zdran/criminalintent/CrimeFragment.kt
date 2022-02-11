@@ -39,6 +39,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     private lateinit var solvedCheckBox: CheckBox
     private lateinit var reportButton: Button
     private lateinit var suspectButton: Button
+    private lateinit var callButton: Button
 
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
         ViewModelProvider(this)[CrimeDetailViewModel::class.java]
@@ -63,6 +64,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
         reportButton = view.findViewById(R.id.crime_report) as Button
         suspectButton = view.findViewById(R.id.crime_suspect) as Button
+        callButton = view.findViewById(R.id.crime_call) as Button
 
         return view
     }
@@ -142,6 +144,10 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
             if (resolvedActivity == null) {
                 isEnabled = false
             }
+        }
+        //打电话按钮的监听
+        callButton.setOnClickListener {
+
         }
 
     }
