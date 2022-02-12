@@ -155,7 +155,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                     Manifest.permission.READ_CONTACTS
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                Log.d(TAG, "callButton: 权限有效")
+                call()
             } else {
                 Log.d(TAG, "callButton: 没有权限")
                 requestCameraPermission()
@@ -174,10 +174,11 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         grantResults: IntArray
     ) {
 
-        when(requestCode){
-            PERMISSION_REQUEST_CONTACT->{
-                if (grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+        when (requestCode) {
+            PERMISSION_REQUEST_CONTACT -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "onRequestPermissionsResult: 请求权限通过")
+                    call()
                 }
             }
         }
@@ -262,7 +263,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     private fun requestCameraPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 requireActivity(),
-                Manifest.permission.CAMERA
+                Manifest.permission.READ_CONTACTS
             )
         ) {
 
@@ -279,6 +280,36 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                 arrayOf(Manifest.permission.READ_CONTACTS),
                 PERMISSION_REQUEST_CONTACT
             )
+        }
+    }
+
+    private fun call() {
+        //查手机号
+        val phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+        val queryFields = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        )
+        val phoneCursor = phoneUri?.let {
+            requireActivity().contentResolver.query(
+                it,
+                queryFields,
+                //书里的代码是根据ID 来查，这里可以根据姓名直接查。无需通过ID查两次，需要注意的是，根据ID查，在开发期间出现ID对不上的情况
+                "${ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME} = '${crime.suspect}'",
+                null,
+                null
+            )
+        }
+        var number: String? = null
+        phoneCursor?.use {
+            if (it.count == 0) {
+                return
+            }
+            it.moveToFirst()
+            number = it.getString(0)
+            Log.d(TAG, "call: $number")
+        }
+        number?.apply {
+            startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${number}")))
         }
     }
 }
