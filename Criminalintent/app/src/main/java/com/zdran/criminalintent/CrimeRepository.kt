@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.zdran.criminalintent.database.CrimeDatabase
 import com.zdran.criminalintent.database.migration_1_2
+import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -18,6 +19,8 @@ class CrimeRepository private constructor(context: Context) {
     ).addMigrations(migration_1_2).build()
     private val crimeDAO = database.crimeDAO()
     private val executor = Executors.newSingleThreadExecutor()
+    private val fileDir = context.applicationContext.filesDir
+
     fun getCrimes(): LiveData<List<Crime>> = crimeDAO.getCrimes()
     fun getCrime(uuid: UUID): LiveData<Crime?> = crimeDAO.getCrime(uuid)
 
@@ -46,4 +49,7 @@ class CrimeRepository private constructor(context: Context) {
             return INSTANCE ?: throw IllegalStateException("数据库仓库未初始化.")
         }
     }
+
+    fun getPhoto(crime: Crime): File = File(fileDir, crime.photoName)
+
 }
