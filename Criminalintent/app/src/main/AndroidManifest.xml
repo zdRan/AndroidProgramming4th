@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zdran.criminalintent">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <application
         android:name=".CriminalIntentApplication"
         android:allowBackup="true"
@@ -20,14 +23,13 @@
             </intent-filter>
         </activity>
         <provider
-            android:authorities="com.zdran.criminalintent.fileprovider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.zdran.criminalintent.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/files">
-            </meta-data>
+                android:resource="@xml/files"></meta-data>
         </provider>
     </application>
 
