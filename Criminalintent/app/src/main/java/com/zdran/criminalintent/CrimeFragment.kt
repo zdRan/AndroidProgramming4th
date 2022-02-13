@@ -27,6 +27,7 @@ private const val TAG = "CrimeFragment"
 
 private const val ARGS_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
+private const val DIALOG_IMAGE = "DialogImage"
 
 //时间选择框的返回code
 private const val REQUEST_DATE = 0
@@ -182,6 +183,12 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                 startActivityForResult(captureImage, REQUEST_PHOTO)
             }
         }
+        photoImage.setOnClickListener {
+            ImageViewDialogFragment.newInstance(photoFile).show(
+                this@CrimeFragment.requireFragmentManager(),
+                DIALOG_IMAGE
+            )
+        }
     }
 
     override fun onStop() {
@@ -251,9 +258,12 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                     suspectButton.text = suspect
                 }
             }
-            requestCode == REQUEST_PHOTO ->{
+            requestCode == REQUEST_PHOTO -> {
                 //取消权限
-                requireActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                requireActivity().revokeUriPermission(
+                    photoUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
                 updatePhotoView()
             }
         }
