@@ -167,12 +167,19 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                 isEnabled = false
             }
             setOnClickListener {
-                captureImage.putExtra(MediaStore.EXTRA_OUTPUT,photoUri)
-                val cameraActivities:List<ResolveInfo> = packageManager.queryIntentActivities(captureImage,PackageManager.MATCH_DEFAULT_ONLY)
-                for (cameraActivity in cameraActivities){
-                    requireActivity().grantUriPermission(cameraActivity.activityInfo.packageName,photoUri,Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                val cameraActivities: List<ResolveInfo> = packageManager.queryIntentActivities(
+                    captureImage,
+                    PackageManager.MATCH_DEFAULT_ONLY
+                )
+                for (cameraActivity in cameraActivities) {
+                    requireActivity().grantUriPermission(
+                        cameraActivity.activityInfo.packageName,
+                        photoUri,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
                 }
-                startActivityForResult(captureImage,REQUEST_PHOTO)
+                startActivityForResult(captureImage, REQUEST_PHOTO)
             }
         }
     }
@@ -180,6 +187,12 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     override fun onStop() {
         super.onStop()
         crimeDetailViewModel.saveCrime(crime)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        //取消权限
+        requireActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
     }
 
     companion object {
@@ -204,6 +217,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         if (crime.suspect.isNotEmpty()) {
             suspectButton.text = crime.suspect
         }
+        updatePhotoView()
     }
 
     override fun onDateSelected(date: Date) {
@@ -237,6 +251,11 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                     suspectButton.text = suspect
                 }
             }
+            requestCode == REQUEST_PHOTO ->{
+                //取消权限
+                requireActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                updatePhotoView()
+            }
         }
     }
 
@@ -256,5 +275,17 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
             getString(R.string.crime_report_suspect, crime.suspect)
         }
         return getString(R.string.crime_report, crime.title, dateString, solvedString, suspect)
+    }
+
+    /**
+     * 更新图片
+     */
+    private fun updatePhotoView() {
+        if (photoFile.exists()) {
+            val bitmap = getScaledBitmap(photoFile.path, requireActivity())
+            photoImage.setImageBitmap(bitmap)
+        } else {
+            photoImage.setImageBitmap(null)
+        }
     }
 }
