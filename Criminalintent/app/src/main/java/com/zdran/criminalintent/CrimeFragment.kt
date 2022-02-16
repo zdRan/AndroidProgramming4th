@@ -72,7 +72,6 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         suspectButton = view.findViewById(R.id.crime_suspect) as Button
         photoButton = view.findViewById(R.id.crime_camera) as ImageButton
         photoImage = view.findViewById(R.id.crime_photo) as ImageView
-
         return view
     }
 
@@ -189,6 +188,10 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                 DIALOG_IMAGE
             )
         }
+        val mPhotoObserver = photoImage.viewTreeObserver;
+        mPhotoObserver.addOnGlobalLayoutListener {
+            Log.d(TAG, "onViewCreated: XXXXXXXXXXXXX ")
+        }
     }
 
     override fun onStop() {
@@ -224,7 +227,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         if (crime.suspect.isNotEmpty()) {
             suspectButton.text = crime.suspect
         }
-        updatePhotoView()
+        updatePhotoView(photoImage.width, photoImage.height)
     }
 
     override fun onDateSelected(date: Date) {
@@ -264,7 +267,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                     photoUri,
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 )
-                updatePhotoView()
+                updatePhotoView(photoImage.width, photoImage.height)
             }
         }
     }
@@ -290,9 +293,9 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     /**
      * 更新图片
      */
-    private fun updatePhotoView() {
+    private fun updatePhotoView(width: Int, height: Int) {
         if (photoFile.exists()) {
-            val bitmap = getScaledBitmap(photoFile.path, requireActivity())
+            val bitmap = getScaledBitmap(photoFile.path, width, height)
             photoImage.setImageBitmap(bitmap)
         } else {
             photoImage.setImageBitmap(null)
