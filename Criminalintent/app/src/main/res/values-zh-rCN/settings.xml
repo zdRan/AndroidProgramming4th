@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Criminalintent</string>
+    <string name="crime_title_hint">请输入标题</string>
+    <string name="crime_title_label">标题</string>
+    <string name="crime_details_label">明细</string>
+    <string name="crime_solved_label">是否解决</string>
+    <string name="new_crime">新增</string>
+    <string name="crime_suspect_text">选择联系人</string>
+    <string name="crime_report_text">抗议或投诉</string>
+    <string name="crime_report">%1$s!
+        crime 发生于 %2$s. %3$s, %4$s
+    </string>
+    <string name="crime_report_solved">问题已解决</string>
+    <string name="crime_report_unsolved">问题未解决</string>
+    <string name="crime_report_no_suspect">未找到嫌疑人</string>
+    <string name="crime_report_suspect">嫌疑人是 %s.</string>
+    <string name="crime_report_subject">处理情况报告</string>
+    <string name="send_report">投诉方式</string>
+</resources>
