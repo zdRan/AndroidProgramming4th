@@ -2,6 +2,7 @@ package com.zdran.beatbox
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zdran.beatbox.databinding.ActivityMainBinding
 import com.zdran.beatbox.databinding.ListItemSoundBinding
 
+private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var beatBox: BeatBox
@@ -24,8 +26,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private inner class SoundHolder(binding: ListItemSoundBinding) :
+    private inner class SoundHolder(private val binding: ListItemSoundBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.viewModel = SoundViewModel()
+        }
+
+        fun bind(sound: Sound) {
+            binding.apply {
+                viewModel?.sound = sound
+                executePendingBindings()
+            }
+        }
     }
 
     private inner class SoundAdapter(private val sounds: List<Sound>) :
@@ -42,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: SoundHolder, position: Int) {
+            Log.d(TAG, "onBindViewHolder: ${sounds[position].name}")
+            holder.bind(sounds[position])
         }
 
         override fun getItemCount() = sounds.size
