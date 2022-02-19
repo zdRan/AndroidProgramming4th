@@ -10,8 +10,13 @@ import com.zdran.beatbox.databinding.ActivityMainBinding
 import com.zdran.beatbox.databinding.ListItemSoundBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var beatBox: BeatBox
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        beatBox = BeatBox(assets)
+        beatBox.loadSound()
+
         val binding: ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.recycleView.apply {
