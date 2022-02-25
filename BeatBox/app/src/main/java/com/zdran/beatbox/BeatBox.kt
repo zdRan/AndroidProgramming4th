@@ -41,4 +41,7 @@ class BeatBox(private val assetManager: AssetManager) {
 
         }
     }
+    fun release(){
+        soundPool.release()
+    }
 }
