@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity() {
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             Log.d(TAG, "onStopTrackingTouch: ")
-
         }
 
     }
