@@ -50,4 +50,8 @@ class BeatBox(private val assetManager: AssetManager) {
     fun setRate(rate: Float) {
         this.rate = rate
     }
+    fun getRate(): String {
+        return "sssss"
+
+    }
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.adapters.SeekBarBindingAdapter
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zdran.beatbox.databinding.ActivityMainBinding
@@ -17,6 +18,9 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var beatBox: BeatBox
+    private val beatBoxViewModel: BeatBoxViewModel by lazy {
+        ViewModelProvider(this).get(BeatBoxViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
