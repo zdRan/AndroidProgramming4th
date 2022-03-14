@@ -14,7 +14,7 @@ private const val MAX_SOUND = 5
 
 class BeatBox(private val assetManager: AssetManager) : BaseObservable() {
     val sounds: List<Sound>
-    var rate = 1
+    var rate = 0
         set(value) {
             field = value
             notifyChange()
@@ -22,7 +22,7 @@ class BeatBox(private val assetManager: AssetManager) : BaseObservable() {
 
     @get:Bindable
     val rateString: String
-        get() = rate.toString()
+        get() = "Playback Speed ${rate * 20} %"
 
     private val soundPool = SoundPool.Builder().setMaxStreams(MAX_SOUND).build()
 
