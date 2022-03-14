@@ -14,7 +14,7 @@ private const val MAX_SOUND = 5
 
 class BeatBox(private val assetManager: AssetManager) : BaseObservable() {
     val sounds: List<Sound>
-    var rate = 0
+    var rate = 1
         set(value) {
             field = value
             notifyChange()
@@ -48,9 +48,7 @@ class BeatBox(private val assetManager: AssetManager) : BaseObservable() {
     }
 
     fun play(sound: Sound) {
-        sound.soundId?.let {
-            soundPool.play(it, 1.0f, 1.0f, 1, 0, rate.toFloat())
-        }
+        soundPool.play(sound.soundId!!, 1.0f, 1.0f, 1, 0, rate.toFloat())
     }
 
     fun release() {

@@ -17,34 +17,31 @@ private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var beatBox: BeatBox
     private val beatBoxViewModel: BeatBoxViewModel by lazy {
         ViewModelProvider(this).get(BeatBoxViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        beatBox = BeatBox(assets)
+
+        if (beatBoxViewModel.beatBox == null) {
+            beatBoxViewModel.beatBox = BeatBox(assets)
+        }
 
         val binding: ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.recycleView.apply {
             layoutManager = GridLayoutManager(context, 3)
-            adapter = SoundAdapter(beatBox.sounds)
+            adapter = SoundAdapter(beatBoxViewModel.beatBox!!.sounds)
         }
         binding.seekBar.setOnSeekBarChangeListener(SeekBarChangeListener())
-        binding.beatBox = beatBox
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        beatBox.release()
+        binding.beatBox = beatBoxViewModel.beatBox
     }
 
     private inner class SoundHolder(private val binding: ListItemSoundBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.viewModel = SoundViewModel(beatBox)
+            binding.viewModel = SoundViewModel(beatBoxViewModel.beatBox!!)
         }
 
         fun bind(sound: Sound) {
@@ -79,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     private inner class SeekBarChangeListener() : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            beatBox.setRate(progress.toFloat())
+            beatBoxViewModel.beatBox!!.setRate(progress.toFloat())
             Log.d(TAG, "onProgressChanged: $progress")
         }
 
