@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             adapter = SoundAdapter(beatBox.sounds)
         }
         binding.seekBar.setOnSeekBarChangeListener(SeekBarChangeListener())
+        binding.beatBox = beatBox
     }
 
     override fun onDestroy() {

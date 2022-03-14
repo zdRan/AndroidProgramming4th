@@ -4,15 +4,25 @@ import android.content.res.AssetFileDescriptor
 import android.content.res.AssetManager
 import android.media.SoundPool
 import android.util.Log
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 
 private const val TAG = "BeatBox"
 private const val SOUND_FOLDER = "sample_sound"
 private const val MAX_SOUND = 5
 
 
-class BeatBox(private val assetManager: AssetManager) {
+class BeatBox(private val assetManager: AssetManager) : BaseObservable() {
     val sounds: List<Sound>
-    private var rate = 1.0f
+    var rate = 1
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
+    @get:Bindable
+    val rateString: String
+        get() = rate.toString()
 
     private val soundPool = SoundPool.Builder().setMaxStreams(MAX_SOUND).build()
 
@@ -39,7 +49,7 @@ class BeatBox(private val assetManager: AssetManager) {
 
     fun play(sound: Sound) {
         sound.soundId?.let {
-            soundPool.play(it, 1.0f, 1.0f, 1, 0, rate)
+            soundPool.play(it, 1.0f, 1.0f, 1, 0, rate.toFloat())
         }
     }
 
@@ -48,10 +58,6 @@ class BeatBox(private val assetManager: AssetManager) {
     }
 
     fun setRate(rate: Float) {
-        this.rate = rate
-    }
-    fun getRate(): String {
-        return "sssss"
-
+        this.rate = rate.toInt()
     }
 }
