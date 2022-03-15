@@ -10,10 +10,9 @@
     </data>
 
     <Button
+        style="@style/BeatBoxButton"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
         android:text="@{viewModel.title}"
         android:onClick="@{()->viewModel.onButtonClicked()}"
         tools:text="Sound name" />
