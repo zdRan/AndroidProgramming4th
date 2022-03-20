@@ -17,7 +17,8 @@
         <item name="android:windowBackground">@color/soothing_blue</item>
         <item name="buttonStyle">@style/BeatBoxButton</item>
     </style>
+
     <style name="BeatBoxButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@color/dark_blue</item>
+        <item name="android:background">@drawable/button_beat_box_normal</item>
     </style>
 </resources>
