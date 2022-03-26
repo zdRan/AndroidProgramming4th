@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/button_beat_box.xml" value="0.5572916666666666" />
+        <entry key="app/src/main/res/drawable/button_beat_box_normal.xml" value="0.5572916666666666" />
+        <entry key="app/src/main/res/drawable/button_beat_box_pressed.xml" value="0.5311542390194075" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.317481884057971" />
         <entry key="app/src/main/res/layout/list_item_sound.xml" value="0.317481884057971" />
       </map>
