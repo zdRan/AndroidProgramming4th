@@ -47,15 +47,29 @@ class NerdLauncherActivity : AppCompatActivity() {
     /**
      * 列表视图的 ViewHolder，绑定启动应用的名称
      */
-    private class ActivityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private class ActivityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         private val nameTextView = itemView as TextView
         private lateinit var resolverInfo: ResolveInfo
+        //为视图指定点击事件
+        init {
+            nameTextView.setOnClickListener(this)
+        }
 
         fun bindActivity(info: ResolveInfo) {
             //同名会有问题的
             this.resolverInfo = info
             val appName = info.loadLabel(itemView.context.packageManager).toString()
             nameTextView.text = appName
+        }
+
+
+        override fun onClick(view: View) {
+            val activityInfo = resolverInfo.activityInfo
+            val intent = Intent(Intent.ACTION_MAIN).apply {
+                setClassName(activityInfo.applicationInfo.packageName, activityInfo.name)
+            }
+            view.context.startActivity(intent)
         }
     }
 
@@ -77,5 +91,6 @@ class NerdLauncherActivity : AppCompatActivity() {
         override fun getItemCount(): Int {
             return resolveInfoList.size
         }
+
     }
 }
