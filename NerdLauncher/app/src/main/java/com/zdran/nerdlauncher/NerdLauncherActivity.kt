@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,18 @@ class NerdLauncherActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         setupAdapter()
+    }
+
+    /**
+     * 禁用返回键，主屏幕不允许返回
+     */
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.i(TAG, "onKeyDown: 禁用返回")
+            false
+        } else {
+            super.onKeyDown(keyCode, event)
+        }
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -51,6 +64,7 @@ class NerdLauncherActivity : AppCompatActivity() {
         View.OnClickListener {
         private val nameTextView = itemView as TextView
         private lateinit var resolverInfo: ResolveInfo
+
         //为视图指定点击事件
         init {
             nameTextView.setOnClickListener(this)
