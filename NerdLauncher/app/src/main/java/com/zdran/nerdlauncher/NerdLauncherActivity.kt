@@ -11,6 +11,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -62,7 +63,9 @@ class NerdLauncherActivity : AppCompatActivity() {
      */
     private class ActivityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        private val nameTextView = itemView as TextView
+        private val nameTextView = itemView.findViewById<TextView>(R.id.app_name_text_view)
+        private val appIconImageView = itemView.findViewById<ImageView>(R.id.app_icon_image_view)
+
         private lateinit var resolverInfo: ResolveInfo
 
         //为视图指定点击事件
@@ -73,8 +76,9 @@ class NerdLauncherActivity : AppCompatActivity() {
         fun bindActivity(info: ResolveInfo) {
             //同名会有问题的
             this.resolverInfo = info
-            val appName = info.loadLabel(itemView.context.packageManager).toString()
-            nameTextView.text = appName
+
+            nameTextView.text = info.loadLabel(itemView.context.packageManager).toString()
+            appIconImageView.setImageDrawable(info.loadIcon(itemView.context.packageManager))
         }
 
 
@@ -95,7 +99,7 @@ class NerdLauncherActivity : AppCompatActivity() {
          */
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false)
+            val view = layoutInflater.inflate(R.layout.activity_list_item, parent, false)
             return ActivityViewHolder(view)
         }
 
