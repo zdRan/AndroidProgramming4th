@@ -14,6 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private const val TAG = "PhotoGalleryFragment"
 
@@ -23,8 +24,8 @@ class PhotoGalleryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.flickr.com/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("https://blog.flickr.net/en/category/theweeklyflickr/")
+            .addConverterFactory(ScalarsConverterFactory.create())
             .build()
         val flickrApi: FlickrApi = retrofit.create(FlickrApi::class.java)
         val flickrHomePageRequest: Call<String> = flickrApi.fetchContents()
