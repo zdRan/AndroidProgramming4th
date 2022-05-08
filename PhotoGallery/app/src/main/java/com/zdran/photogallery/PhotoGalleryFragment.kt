@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zdran.photogallery.api.FlickrApi
@@ -23,20 +25,9 @@ class PhotoGalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://blog.flickr.net/en/category/theweeklyflickr/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        val flickrApi: FlickrApi = retrofit.create(FlickrApi::class.java)
-        val flickrHomePageRequest: Call<String> = flickrApi.fetchContents()
-        flickrHomePageRequest.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.d(TAG, "onResponse: received: ${response.body()}")
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.e(TAG, "onFailure: Failed t: ", t)
-            }
+        val flickrLiveData: LiveData<String> = FlickrFetchr().fetchPhotos()
+        flickrLiveData.observe(this, {
+            Log.d(TAG, "onCreate: $it")
         })
 
     }
