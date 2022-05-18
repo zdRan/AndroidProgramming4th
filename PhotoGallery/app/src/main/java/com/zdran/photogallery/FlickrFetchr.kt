@@ -45,6 +45,8 @@ class FlickrFetchr {
 
             override fun onFailure(call: Call<FlickrResponse>, t: Throwable) {
                 Log.d(TAG, "onFailure: ", t)
+                val galleryItem = GalleryItem("test","test","https://www.bing.com/th?id=OHR.SchlossGluecksburg_ZH-CN4079837227_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp")
+                responseLiveData.value = mutableListOf(galleryItem)
             }
         })
         return responseLiveData
