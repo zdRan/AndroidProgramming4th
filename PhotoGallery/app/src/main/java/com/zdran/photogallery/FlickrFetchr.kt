@@ -35,8 +35,7 @@ class FlickrFetchr {
                 Log.d(TAG, "onResponse: ${response.body()}")
                 val flickrResponse: FlickrResponse? = response.body()
                 val photoResponse: PhotoResponse? = flickrResponse?.photos
-                var galleryItems: List<GalleryItem>? =
-                    photoResponse?.galleryItems ?: mutableListOf()
+                var galleryItems: List<GalleryItem>? = photoResponse?.galleryItems ?: mutableListOf()
                 galleryItems = galleryItems?.filterNot {
                     it.url.isBlank()
                 }

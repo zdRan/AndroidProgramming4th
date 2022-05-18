@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zdran.photogallery.api.FlickrApi
 import com.zdran.photogallery.api.GalleryItem
 import com.zdran.photogallery.mockapi.MockFlickrFetchr
+import com.zdran.photogallery.mockapi.MockGalleryItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,13 +28,11 @@ class PhotoGalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val flickrLiveData: LiveData<String> = MockFlickrFetchr().fetchPhotos()
-        flickrLiveData.observe(this, {
-            Log.d(TAG, "onCreate: $it")
+        val flickrLiveData: LiveData<List<MockGalleryItem>> = MockFlickrFetchr().fetchPhotos()
+        flickrLiveData.observe(this, { mockGalleryItems ->
+            Log.d(TAG, "onCreate: $mockGalleryItems")
         })
-
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
