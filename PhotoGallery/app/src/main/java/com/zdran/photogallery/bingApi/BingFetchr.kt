@@ -9,7 +9,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private const val TAG = "FlickrFetchr"
+private const val TAG = "BingFetchr"
 
 /**
  * 由于一些其他因素导致 flickr 网站无法访问，所以这里使用了必应的每日壁纸接口。
