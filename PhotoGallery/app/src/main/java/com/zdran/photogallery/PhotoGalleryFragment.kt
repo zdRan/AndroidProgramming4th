@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zdran.photogallery.bingApi.BingFetchr
@@ -16,14 +18,13 @@ private const val TAG = "PhotoGalleryFragment"
 
 class PhotoGalleryFragment : Fragment() {
     private lateinit var photoRecyclerView: RecyclerView
+    private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val flickrLiveData: LiveData<List<BingGalleryItem>> = BingFetchr().fetchPhotos()
-        flickrLiveData.observe(this, { mockGalleryItems ->
-            Log.d(TAG, "onCreate: $mockGalleryItems")
-        })
+        photoGalleryViewModel = ViewModelProviders.of(this)[PhotoGalleryViewModel::class.java]
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,6 +33,15 @@ class PhotoGalleryFragment : Fragment() {
         photoRecyclerView = view.findViewById(R.id.photo_recycler_view)
         photoRecyclerView.layoutManager = GridLayoutManager(context, 3)
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        photoGalleryViewModel.galleryItemLiveData.observe(
+            viewLifecycleOwner,
+            { galleryItems ->
+                Log.d(TAG, "onViewCreated: $galleryItems")
+            })
     }
 
     companion object {
