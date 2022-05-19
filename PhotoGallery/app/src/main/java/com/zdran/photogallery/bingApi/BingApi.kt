@@ -9,6 +9,6 @@ interface BingApi {
 
 
 
-    @GET("HPImageArchive.aspx?format=js&idx=0&n=5")
+    @GET("HPImageArchive.aspx?format=js&idx=0&n=8")
     fun fetchPhoto(): Call<BingResponse>
 }
