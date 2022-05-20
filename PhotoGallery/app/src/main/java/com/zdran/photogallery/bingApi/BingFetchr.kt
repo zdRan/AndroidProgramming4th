@@ -16,6 +16,7 @@ private const val TAG = "BingFetchr"
  */
 class BingFetchr {
     private val bingApi: BingApi
+    private lateinit var bingRequest: Call<BingResponse>
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -23,15 +24,17 @@ class BingFetchr {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         bingApi = retrofit.create(BingApi::class.java)
+
     }
 
     fun fetchPhotos(): LiveData<List<BingGalleryItem>> {
         val responseLiveData: MutableLiveData<List<BingGalleryItem>> = MutableLiveData()
-        val flickrRequest: Call<BingResponse> = bingApi.fetchPhoto()
-        flickrRequest.enqueue(object : Callback<BingResponse> {
+        bingRequest = bingApi.fetchPhoto()
+        bingRequest.enqueue(object : Callback<BingResponse> {
             override fun onResponse(call: Call<BingResponse>, response: Response<BingResponse>) {
                 Log.d(TAG, "onResponse: ${response.body()}")
-                var bingGalleryItems: List<BingGalleryItem> = response.body()?.galleryItems ?: mutableListOf()
+                var bingGalleryItems: List<BingGalleryItem> =
+                    response.body()?.galleryItems ?: mutableListOf()
                 bingGalleryItems = bingGalleryItems.filterNot {
                     it.url.isBlank()
                 }
@@ -43,5 +46,11 @@ class BingFetchr {
             }
         })
         return responseLiveData
+    }
+
+    fun cancelRequest() {
+        if (::bingRequest.isInitialized){
+            bingRequest.cancel()
+        }
     }
 }

@@ -8,4 +8,8 @@ import com.zdran.photogallery.bingApi.BingGalleryItem
 class PhotoGalleryViewModel : ViewModel() {
     val galleryItemLiveData: LiveData<List<BingGalleryItem>> = BingFetchr().fetchPhotos()
 
+    override fun onCleared() {
+        super.onCleared()
+        BingFetchr().cancelRequest()
+    }
 }
