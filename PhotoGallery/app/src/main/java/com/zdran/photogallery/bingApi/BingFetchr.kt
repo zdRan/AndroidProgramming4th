@@ -6,27 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 private const val TAG = "BingFetchr"
 
 /**
  * 由于一些其他因素导致 flickr 网站无法访问，所以这里使用了必应的每日壁纸接口。
  */
-class BingFetchr {
-    private val bingApi: BingApi
+class BingFetchr @Inject constructor(private val bingApi: BingApi) {
+
     private lateinit var bingRequest: Call<BingResponse>
-
-    init {
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl("https://www.bing.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        bingApi = retrofit.create(BingApi::class.java)
-
-    }
-
     fun fetchPhotos(): LiveData<List<BingGalleryItem>> {
         val responseLiveData: MutableLiveData<List<BingGalleryItem>> = MutableLiveData()
         bingRequest = bingApi.fetchPhoto()
@@ -49,7 +38,7 @@ class BingFetchr {
     }
 
     fun cancelRequest() {
-        if (::bingRequest.isInitialized){
+        if (::bingRequest.isInitialized) {
             bingRequest.cancel()
         }
     }
